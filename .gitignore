@@ -1,0 +1,5 @@
+env/
+*.sav
+bin/
+__pycache__/
+.vscode/
