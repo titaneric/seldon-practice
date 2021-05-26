@@ -1,0 +1,40 @@
+apiVersion: machinelearning.seldon.io/v1alpha2
+kind: SeldonDeployment
+metadata:
+  name: seldon-deployment-example
+  namespace: seldon
+spec:
+  name: sklearn-iris-deployment
+  predictors:
+  - componentSpecs:
+    - spec:
+        containers:
+        - image: titaneric/sklearn-iris:0.1
+          imagePullPolicy: IfNotPresent
+          name: sklearn-iris-classifier
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            httpGet:
+              path: /health/ping
+              port: http
+              scheme: HTTP
+            timeoutSeconds: 1 
+        - image: titaneric/increment:0.1
+          imagePullPolicy: IfNotPresent
+          name: sklearn-plus
+    graph:
+      endpoint:
+        type: REST
+      name: sklearn-iris-classifier
+      type: MODEL
+      # children: []
+      children:
+        - name: sklearn-plus
+          endpoint:
+            type: REST
+          type: MODEL
+    name: sklearn-iris-predictor
+    replicas: 1
