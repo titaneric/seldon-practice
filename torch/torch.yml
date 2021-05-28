@@ -1,0 +1,25 @@
+apiVersion: machinelearning.seldon.io/v1alpha2
+kind: SeldonDeployment
+metadata:
+  name: graph-metadata-input
+  namespace: seldon
+spec:
+  name: test-deployment
+  predictors:
+  - componentSpecs:
+    - spec:
+        containers:
+        - image: titaneric/transformer:0.2
+          name: transformer
+
+        - image: titaneric/model:0.4
+          name: model
+    graph:
+      name: transformer
+      type: TRANSFORMER
+      children:
+      - name: model
+        type: MODEL
+        children: []
+    name: example
+    replicas: 1

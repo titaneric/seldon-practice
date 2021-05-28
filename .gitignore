@@ -1,5 +1,9 @@
 env/
 *.sav
 bin/
+.bin/
+whl/
 __pycache__/
 .vscode/
+model_blob/
+*.json
