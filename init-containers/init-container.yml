@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+stringData:
+  rclone.conf: |
+    [cluster-minio]
+    type = s3
+    provider = minio
+    env_auth = false
+    access_key_id = minioadmin
+    secret_access_key = minioadmin
+    endpoint = http://minio.minio-system.svc.cluster.local:9000
+
+
+---
+
+apiVersion: machinelearning.seldon.io/v1
+kind: SeldonDeployment
+metadata:
+  name: torch-server
+spec:
+  predictors:
+  - name: default
+    replicas: 1
+    graph:
+      name: classifier
+      type: MODEL
+
+    componentSpecs:
+    - spec:
+        volumes:
+        - name: classifier-provision-location
+          emptyDir: {}
+        
+        - name: config
+          secret:
+            secretName: mysecret
+
+        initContainers:
+        - name: classifier-model-initializer
+          image: rclone/rclone:latest
+          imagePullPolicy: IfNotPresent
+          args:
+            - "copy"
+            - "cluster-minio:init-container"
+            - "/mnt/models"
+
+          volumeMounts:
+          - mountPath: /mnt/models
+            name: classifier-provision-location
+
+          - name: config
+            mountPath: "/config/rclone"
+            readOnly: true
+
+        containers:
+        - name: classifier
+          image: titaneric/torch-server:0.2
+
+          volumeMounts:
+          - mountPath: /mnt/models
+            name: classifier-provision-location
+            readOnly: true
+
+          env:
+          - name: PREDICTIVE_UNIT_PARAMETERS
+            value: '[{"name":"model_uri","value":"/mnt/models/densenet121-a639ec97.pth","type":"STRING"}]'
