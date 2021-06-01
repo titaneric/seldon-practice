@@ -153,3 +153,11 @@ minikube tunnel
 
 ![](https://i.imgur.com/k3cke2Z.png)
 
+
+## Anaconda environment
+
+```bash
+cd conda
+
+s2i -e PERSISTENCE=0 -e SERVICE_TYPE=MODEL -e MODEL_NAME=MixedModel -e API_TYPE=REST -e CONDA_ENV_NAME=py37 build . seldonio/seldon-core-s2i-python3:1.9.0-dev conda:0.1 
+```
