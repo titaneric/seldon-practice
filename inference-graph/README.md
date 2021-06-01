@@ -124,6 +124,12 @@ docker run --rm -it -p 5000:9000 transformer:0.1
 ```python
 cd model/
 
+mkdir model_blob && cd model_blob
+
+wget https://download.pytorch.org/models/densenet121-a639ec97.pth
+
+cd ..
+
 s2i -e PERSISTENCE=0 -e SERVICE_TYPE=MODEL -e MODEL_NAME=Model -e API_TYPE=REST build -i ../whl/:/whl . seldonio/seldon-core-s2i-python3:1.9.0-dev model:0.1
 
 docker run --rm -it -p 5000:9000 model:0.1
