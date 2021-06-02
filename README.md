@@ -22,5 +22,8 @@
 
 ## Inference Graph
 
-
 [inference-graph](inference-graph/README.md)
+
+## Init containers
+
+[init-containers](init-containers/README.md)
