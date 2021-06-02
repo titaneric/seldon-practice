@@ -1,0 +1,15 @@
+apiVersion: machinelearning.seldon.io/v1
+kind: SeldonDeployment
+metadata:
+  name: torch-server-simplified
+spec:
+  name: iris
+  predictors:
+  - name: default
+    replicas: 1
+    graph:
+      name: classifier
+      implementation: TORCH_SERVER
+      modelUri: mys3:init-container
+      storageInitializerImage: seldonio/rclone-init-container-example:0.1
+      envSecretRefName: seldon-rclone-secret

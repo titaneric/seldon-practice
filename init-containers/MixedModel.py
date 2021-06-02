@@ -9,6 +9,7 @@ from torch import load
 import torchvision.transforms as transforms
 from torchvision.models import DenseNet
 from PIL import Image
+import seldon_core
 
 # https://github.com/pytorch/vision/blob/882e11db8138236ce375ea0dc8a53fd91f715a90/torchvision/models/densenet.py#L224-L239
 def _load_state_dict(model: nn.Module, model_url: str) -> None:
@@ -29,13 +30,17 @@ def _load_state_dict(model: nn.Module, model_url: str) -> None:
             del state_dict[key]
     model.load_state_dict(state_dict)
 
+MODEL_NAME = "torch_model.pth"
 
 class MixedModel:
     def __init__(self, model_uri) -> None:
         # path = "model_blob/densenet121-a639ec97.pth"
         # Make sure to pass `pretrained` as `True` to use the pretrained weights:
         self.model = DenseNet()
-        _load_state_dict(self.model, model_uri)
+        model_file = os.path.join(
+            seldon_core.Storage.download(model_uri), MODEL_NAME
+        )
+        _load_state_dict(self.model, model_file)
         # Since we are using our model only for inference, switch to `eval` mode:
         self.model.eval()
 
