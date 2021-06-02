@@ -103,7 +103,7 @@ Steps
 3. Use `rclone` to download the model blob from modelUri to mounted volume in `init-container`
 4. Model `classfier` load the model from mounted volume and predict.
 
-For complete customized init container, see [init-container.yml](init-container.yml).
+For complete customized init container, see [init-container.yml](complete/init-container.yml).
 
 1. Create a secret called `mysecret`, define the rclone config and create a config alias `cluster-minio`.
 2. Create a `SeldonDeployment` named `torch-server`.
@@ -123,6 +123,8 @@ Note that
 > ![](https://i.imgur.com/B1aIm8z.png)
 
 ```bash
+cd complete
+
 kubectl apply -f init-containers.yml
 ```
 
@@ -140,11 +142,13 @@ kubectl logs <pod name> classifier
 
 ## Simplified Seldon Init Container
 
-In [seldon-rclone-secret.yml](seldon-rclone-secret.yml), define the environment variable that could be read by`rclone`.
+In [seldon-rclone-secret.yml](simplified/seldon-rclone-secret.yml), define the environment variable that could be read by`rclone`.
 
 Environment variable define the config alias `mys3` for minio. 
 
 ```bash
+cd simplified
+
 kubectl apply -f seldon-rclone-secret.yml
 ```
 
@@ -160,9 +164,21 @@ Add new implementation `TORCH_SERVER` to `predictor_servers` key in `seldon-conf
 kubectl apply -f seldon-config.yml
 ```
 
-Simplify the customizied init-container and server in [simplified-init-container.yml](simplified-init-container.yml).
+Simplify the customizied init-container and server in [simplified-init-container.yml](simplified/simplified-init-container.yml).
 
 Note that `seldon-rclone-secret` in envSecretRefName, `TORCH_SERVER` in implementation and `mys3:init-container` in modelUri.
+
+Required to copy or rename model file name into `torch_model.pth`.
+
+```bash
+mc ls minio-seldon/init-container
+
+mc cp minio-seldon/init-container/densenet121-a639ec97.pth minio-seldon/init-container/torch_model.pth
+
+mc ls minio-seldon/init-container 
+```
+
+![](https://i.imgur.com/NDGPH4x.png)
 
 ```bash
 kubectl apply -f simplified-init-container.yml
