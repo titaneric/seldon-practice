@@ -39,7 +39,7 @@ class MixedModel:
         # Since we are using our model only for inference, switch to `eval` mode:
         self.model.eval()
 
-        self.imagenet_class_index = json.load(open("imagenet_class_index.json")))
+        self.imagenet_class_index = json.load(open("imagenet_class_index.json"))
 
     def predict(self, image_bytes, feats=None):
         image_bytes = self.transform_input(image_bytes)
