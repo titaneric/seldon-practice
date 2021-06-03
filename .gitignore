@@ -1,4 +1,5 @@
 env/
+*.pth
 *.sav
 bin/
 .bin/
