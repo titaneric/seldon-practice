@@ -24,6 +24,7 @@
 
 [inference-graph](inference-graph/README.md)
 
-## Init containers
+## Torch Production ready
 
-[init-containers](init-containers/README.md)
+[torch-prod-ready](torch-prod-ready/README.md)
+
