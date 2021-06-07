@@ -24,9 +24,9 @@ class MixedModel:
 
         self.imagenet_class_index = json.load(open("imagenet_class_index.json"))
 
-    def predict(self, image_bytes, feats=None):
-        image_bytes = self.transform_input(image_bytes)
-        outputs = self.model.forward(torch.FloatTensor(image_bytes))
+    def predict(self, image_list, feats=None):
+        image_list = self.transform_input(image_list)
+        outputs = self.model.forward(torch.FloatTensor(image_list))
         _, y_hat = outputs.max(1)
         predicted_idx = str(y_hat.item())
         return self.imagenet_class_index[predicted_idx]

@@ -16,7 +16,7 @@ python transformed_model.py
 
 Test transformed model
 
-```
+```bash
 cd torch-prod-ready
 
 python test_prod.py
@@ -27,7 +27,7 @@ python test_prod.py
 Prepare new prepackaged model server
 
 ```bash
-s2i -e PERSISTENCE=0 -e SERVICE_TYPE=MODEL -e MODEL_NAME=MixedModel -e API_TYPE=REST build -e CONDA_ENV_NAME=py36 . seldonio/seldon-core-s2i-python3:1.9.0-dev torch-server:0.4
+s2i -e PERSISTENCE=0 -e SERVICE_TYPE=MODEL -e MODEL_NAME=MixedModel -e API_TYPE=REST build -e CONDA_ENV_NAME=py37 . seldonio/seldon-core-s2i-python3:1.9.0-dev torch-server:0.4
 ```
 
 Test docker image locally
@@ -45,8 +45,6 @@ docker push titaneric/torch-server:0.4
 Change version from 0.3 to 0.4
 
 ```
-docker pull titaneric/torch-server:0.4
-
 kubectl edit configmap seldon-config -n seldon-system
 ```
 
