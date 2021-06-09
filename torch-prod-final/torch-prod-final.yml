@@ -1,0 +1,37 @@
+apiVersion: machinelearning.seldon.io/v1
+kind: SeldonDeployment
+metadata:
+  name: torch-server-prod-final
+spec:
+  name: iris
+  predictors:
+  - name: default
+    replicas: 1
+    componentSpecs:
+    - spec:
+        containers:
+        - image: titaneric/transformer-input:1.0
+          name: transformer-input
+          imagePullPolicy: Always
+          env:
+            - name: SELDON_LOG_LEVEL
+              value: INFO
+            
+        - image: titaneric/transformer-output:1.0
+          name: transformer-output
+          imagePullPolicy: Always
+          env:
+            - name: SELDON_LOG_LEVEL
+              value:  DEBUG
+    graph:
+      name: transformer-input
+      type: TRANSFORMER
+      children:
+      - name: classifier
+        implementation: TORCH_SERVER
+        modelUri: mys3:init-container
+        envSecretRefName: seldon-rclone-secret
+        type: MODEL
+        children: 
+          - name: transformer-output
+            type: OUTPUT_TRANSFORMER
