@@ -20,4 +20,5 @@ class Transformer:
                                                 [0.229, 0.224, 0.225])])
         image = Image.open(io.BytesIO(image))
         return my_transforms(image).unsqueeze(0).tolist()
+        
 

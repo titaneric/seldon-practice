@@ -167,3 +167,45 @@ cd conda
 
 s2i -e PERSISTENCE=0 -e SERVICE_TYPE=MODEL -e MODEL_NAME=MixedModel -e API_TYPE=REST -e CONDA_ENV_NAME=py37 build . seldonio/seldon-core-s2i-python3:1.9.0-dev conda:0.1 
 ```
+
+## Raw request body
+
+```
+cd torch-raw
+
+s2i -i ../../whl:/whl -e PERSISTENCE=0 -e SERVICE_TYPE=TRANSFORMER -e MODEL_NAME=Transformer -e API_TYPE=REST build  . seldonio/seldon-core-s2i-python3:1.9.0-dev transformer-raw:0.1
+```
+
+### Original request
+
+```python
+def transform_input(self, image, feats=None):
+    my_transforms = transforms.Compose([transforms.Resize(255),
+                                        transforms.CenterCrop(224),
+                                        transforms.ToTensor(),
+                                        transforms.Normalize(
+                                            [0.485, 0.456, 0.406],
+                                            [0.229, 0.224, 0.225])])
+    image = Image.open(io.BytesIO(image))
+    return my_transforms(image).unsqueeze(0).tolist()
+```
+
+### Raw request
+
+```python
+def transform_input_raw(self, request, feats=None):
+    # logger.info(request)
+    b64_file = request.get("binData", "")
+    if b64_file:
+        image = base64.b64decode(b64_file)
+        my_transforms = transforms.Compose(
+            [
+                transforms.Resize(255),
+                transforms.CenterCrop(224),
+                transforms.ToTensor(),
+                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+            ]
+        )
+        image = Image.open(io.BytesIO(image))
+        return {"data": {"ndarray": my_transforms(image).unsqueeze(0).tolist()}}
+```

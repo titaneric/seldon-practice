@@ -1,0 +1,28 @@
+apiVersion: machinelearning.seldon.io/v1alpha2
+kind: SeldonDeployment
+metadata:
+  name: graph-input-raw
+spec:
+  name: test-deployment
+  predictors:
+  - componentSpecs:
+    - spec:
+        containers:
+        - image: titaneric/transformer-raw:0.1
+          name: transformer
+          imagePullPolicy: Always
+
+        - image: titaneric/model:0.4
+          name: model
+          env:
+            - name: SELDON_LOG_LEVEL
+              value: INFO
+    graph:
+      name: transformer
+      type: TRANSFORMER
+      children:
+      - name: model
+        type: MODEL
+        children: []
+    name: example
+    replicas: 1

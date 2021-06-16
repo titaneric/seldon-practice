@@ -44,7 +44,7 @@ model.predict([[5.964, 4.006, 2.081, 1.031]])
 ![](https://i.imgur.com/NmIBx2J.png)
 
 ```bash=
-s2i -e PERSISTENCE=0 -e SERVICE_TYPE=MODEL -e MODEL_NAME=Model -e API_TYPE=REST build  . seldonio/seldon-core-s2i-python3:0.18 seldonio/sklearn-iris:0.1
+s2i -e PERSISTENCE=0 -e SERVICE_TYPE=MODEL -e MODEL_NAME=Model -e API_TYPE=REST build  . seldonio/seldon-core-s2i-python3:0.18 sklearn-iris:0.1
 ```
 
 Source to image
