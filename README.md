@@ -19,10 +19,13 @@
 
 [seldon-core-language-wrappers](seldon-core-language-wrappers/README.md)
 
-
 ## Inference Graph
 
 [inference-graph](inference-graph/README.md)
+
+## Init Containers
+
+[init-containers](init-containers/README.md)
 
 ## Torch Production ready
 
